@@ -56,6 +56,12 @@ and you can browse to the webserver to see the site.
 To run this as a docker, you will need to install [docker and docker compose](https://docs.docker.com/compose/install/).  
 Once everything is installed, the simple command `docker-compose up -d` will download and install all necessary docker images and services.
 
+**Note** that this is unconveitonal docker deployment as there are additional steps that need to happen to get the site off of the ground.  
+Normally the container houses all of the files inside the container.  This was kept this way for active development.
+If we were to do a normal deployment, only the command `docker-compose up -d` would be needed to spin up the site.
+
+Follow the remaining steps to view the site:
+
 ### Vendor setup
 
 Once the containers are running, we'll need to install the vendor the directory.  To do so, run the following commands
@@ -69,9 +75,13 @@ Once the containers are running, we'll need to install the vendor the directory.
     # run composer install
     composer install
 
+Once these steps are complete, you should be able to see the site if you were to browse to http://localhost
+
 ### Database Setup
 
 There is no database setup needed here as the database will auto-initialize with the SQL file within docker/mysql/schema.sql
+
+
 
 ## Questions
 
