@@ -105,6 +105,7 @@ class LinkController extends AbstractController
      * I went this route for deletion vs a form button because this is an easier
      * method than managing multiple forms on the layout page.
      * an option here is to add security to prevent accidental deletion.
+     *
      * delete the link in question
      * @Route("/delete/{uri}", name="delete")
      */
