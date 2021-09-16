@@ -36,9 +36,7 @@ class LinkController extends AbstractController
             is_null($link->getPreview()) &&
             (
                 $link->getPreviewAttempts() === 0 ||
-                (
-                    is_null($link->getPreview()) && $link->getPreviewAttempts() >= 1 && $reattempt
-                )
+                ( $link->getPreviewAttempts() >= 1 && $reattempt )
             )
         ){
             // todo: move this to a service
