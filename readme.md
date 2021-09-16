@@ -54,7 +54,7 @@ and you can browse to the webserver to see the site.
 ## Docker set up
 
 To run this as a docker, you will need to install [docker and docker compose](https://docs.docker.com/compose/install/).  
-The simple command `docker-compose up -d` will download and install all necessary.
+Once everything is installed, the simple command `docker-compose up -d` will download and install all necessary docker images and services.
 
 ### Vendor setup
 
@@ -73,7 +73,7 @@ Once the containers are running, we'll need to install the vendor the directory.
 
 There is no database setup needed here as the database will auto-initialize with the SQL file within docker/mysql/schema.sql
 
-## Question
+## Questions
 
 If there are any issues or questions about the setup, please feel free to reach out to me at.  
 I wish not to put my contact inforamtion here as this is a public github, 
