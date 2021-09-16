@@ -5,9 +5,8 @@ namespace App\Controller;
 use App\Entity\Link;
 use App\Form\LinkType;
 use App\Repository\LinkRepository;
-use ConvertApi\ConvertApi;
+use App\Service\PreviewService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,8 +27,12 @@ class LinkController extends AbstractController
     /**
      * view the details of the link in question as well as generate a PDF for a preview
      * @Route("/view/{uri}", name="details")
+     * @param Link $link
+     * @param Request $request
+     * @param PreviewService $previewService
+     * @return Response
      */
-    public function view(Link $link, Request $request, ConvertApi $convertApi): Response
+    public function view(Link $link, Request $request, PreviewService $previewService): Response
     {
         $reattempt = ($request->query->get('reattempt', false) !== false);
         if(
@@ -39,22 +42,7 @@ class LinkController extends AbstractController
                 ( $link->getPreviewAttempts() >= 1 && $reattempt )
             )
         ){
-            // todo: move this to a service
-            $em = $this->getDoctrine()->getManager();
-            $filesystem = new Filesystem();
-            $link->incrementPreviewAttempt();
-            try{
-                $result = ConvertApi::convert('pdf', [ 'Url' => $link->getUrl() ], 'web');
-                $basePath = $this->getParameter('kernel.project_dir').'/public';
-                $sitePath = '/pdf/'.$link->getUri().'.pdf';
-                $filesystem->dumpFile($basePath.$sitePath, $result->getFile()->getContents());
-                $link->setPreview($sitePath);
-            }catch (\Exception $e){
-                // todo: feature enhancement, error checking?
-            }
-            $em->persist($link);
-            $em->flush();
-            $em->refresh($link);
+            $previewService->createPreview($link);
             if($reattempt){
                 return $this->redirectToRoute('details', ['uri' => $link->getUri()]);
             }
@@ -68,14 +56,23 @@ class LinkController extends AbstractController
      * edit the details of the link in question or create a new one
      * @Route("/edit/{uri}", name="edit")
      * @Route("/new", name="new")
+     * @param Request $request
+     * @param Link|null $link
+     * @param PreviewService $previewService
+     * @return Response
      */
-    public function edit(Request $request, Link $link = null): Response
+    public function edit(Request $request, PreviewService $previewService, Link $link = null): Response
     {
         $form = $this->createForm(LinkType::class, $link);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $link = $form->getData();
             $link->setUpdated(new \DateTime());
+            if(!is_null($link->getId())){
+                // this is not a new item, assuming the URL has changed,
+                // we'll need to remove the image to re-generate a screenshot
+                $previewService->removePreview($link);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($link);
             $em->flush();
@@ -90,8 +87,9 @@ class LinkController extends AbstractController
      * delete the link in question
      * @Route("/delete/{uri}", name="delete")
      */
-    public function delete(Link $link): Response
+    public function delete(Link $link, PreviewService $previewService): Response
     {
+        $previewService->removePreview($link);
         $em = $this->getDoctrine()->getManager();
         $em->remove($link);
         $em->flush();

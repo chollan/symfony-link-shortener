@@ -18,6 +18,6 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-/public/pdf
+/public/pdf/*
 !/public/pdf/.gitkeep
 .idea
