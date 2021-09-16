@@ -14,17 +14,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends AbstractController
 {
     /**
+     * one of the main "actions" in th test documentation
+     *
      * list all the links that are configured in the system
      * @Route("/", name="listing")
      */
-    public function index(LinkRepository $linkRepository): Response
+    public function index(Request $request, LinkRepository $linkRepository): Response
     {
+        $form = $this->createForm(LinkType::class, new Link());
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $link = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($link);
+            $em->flush();
+            return $this->redirectToRoute('details', ['uri' => $link->getUri()]);
+        }
         return $this->render('link/index.html.twig', [
-            'links' => $linkRepository->findAll()
+            'links' => $linkRepository->findAll(),
+            'form' => $form->createView()
         ]);
     }
 
     /**
+     * one of the main "actions" in th test documentation as well as
+     * some additional feature functionality sprinkled through here
+     *
      * view the details of the link in question as well as generate a PDF for a preview
      * @Route("/view/{uri}", name="details")
      * @param Link $link
@@ -53,15 +68,16 @@ class LinkController extends AbstractController
     }
 
     /**
+     * An "additional feature" as outlined in the test documentation
+     *
      * edit the details of the link in question or create a new one
      * @Route("/edit/{uri}", name="edit")
-     * @Route("/new", name="new")
      * @param Request $request
      * @param Link|null $link
      * @param PreviewService $previewService
      * @return Response
      */
-    public function edit(Request $request, PreviewService $previewService, Link $link = null): Response
+    public function edit(Request $request, PreviewService $previewService, Link $link): Response
     {
         $form = $this->createForm(LinkType::class, $link);
         $form->handleRequest($request);
@@ -84,6 +100,11 @@ class LinkController extends AbstractController
     }
 
     /**
+     * An "additional feature" as outlined in the test documentation
+     *
+     * I went this route for deletion vs a form button because this is an easier
+     * method than managing multiple forms on the layout page.
+     * an option here is to add security to prevent accidental deletion.
      * delete the link in question
      * @Route("/delete/{uri}", name="delete")
      */
@@ -97,6 +118,8 @@ class LinkController extends AbstractController
     }
 
     /**
+     * one of the main "actions" in th test documentation
+     *
      * Redirect the user to the configured domain
      * the analytic incrementation happens inside the event subscriber
      * this goes last so it will catch the URL in question
