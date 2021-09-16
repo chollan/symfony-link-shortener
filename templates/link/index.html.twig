@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LinkController!{% endblock %}
+
+{% block body %}
+    <h1>Short Links</h1>
+    <table class="table">
+        <tr>
+            <th>Shortened</th>
+            <th>Will Redirect To</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+        {% for link in links %}
+            <tr>
+                <td>{{ app.request.getSchemeAndHttpHost()~'/'~link.uri }}</td>
+                <td>{{ link }}</td>
+                <td>
+                    {% if link.created %}
+                        {{ link.created.format('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('details', {'uri':link.uri}) }}" class="btn btn-outline-primary">View</a>
+                    <a href="{{ path('edit', {'uri':link.uri}) }}" class="btn btn-outline-warning">Edit</a>
+                    <a href="{{ path('delete', {'uri':link.uri}) }}" onclick="return confirm('Are you sure you want to delete this link?')" class="btn btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ path('new') }}" class="btn btn-outline-primary">New Link</a>
+{% endblock %}

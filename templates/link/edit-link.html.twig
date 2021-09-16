@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LinkController!{% endblock %}
+
+{% block body %}
+    <h1>
+        {% if link %}
+            Edit Link {{ domain~link.uri }}
+        {% else %}
+            New Link
+        {% endif %}
+    </h1>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.url) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

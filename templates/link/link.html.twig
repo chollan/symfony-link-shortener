@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LinkController!{% endblock %}
+
+{% block body %}
+    <h1>Link Details</h1>
+    <p>
+        <a href="{{ path('listing') }}">&larr; Back to listing</a>
+    </p>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card">
+                <img class="card-img-top" src="{{ qr_code_data_uri(domain~link.uri) }}" />
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th>Generated URL</th>
+                            <td>{{ domain~link.uri }}</td>
+                        </tr>
+                        <tr>
+                            <th>Links To</th>
+                            <td>{{ link.url }}</td>
+                        </tr>
+                        <tr>
+                            <th>Number of times linked</th>
+                            <td>{{ link.redirectCount }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td>{{ link.created.format('Y-m-d H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Modified</th>
+                            <td>{{ link.created.format('Y-m-d H:i:s') }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h2> Preview </h2>
+            <p class="font-italic">
+                This preview uses a 3rd party tool to obtain a screenshot.  The 3rd party servers may reside outside of the united states.
+            </p>
+
+            {% if link.preview %}
+                <object type="application/pdf" data="{{ link.preview }}" width="100%" height="100%"></object>
+            {% else %}
+                {% if link.previewAttempts > 0 %}
+                    <div class="alert alert-danger" role="alert">
+                        There was an error when attempting to generate a preview for this link.  The attempt was tried {{ link.previewAttempts }} time(s).  <a href="{{ path('details', {'uri':link.uri, }) }}" class="btn btn-outline-danger">Retry generation</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
