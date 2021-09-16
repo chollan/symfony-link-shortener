@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends AbstractController
 {
     /**
-     * one of the main "actions" in th test documentation
+     * one of the main "actions" in the test documentation
      *
      * list all the links that are configured in the system
      * @Route("/", name="listing")
@@ -37,7 +37,7 @@ class LinkController extends AbstractController
     }
 
     /**
-     * one of the main "actions" in th test documentation as well as
+     * one of the main "actions" in the test documentation as well as
      * some additional feature functionality sprinkled through here
      *
      * view the details of the link in question as well as generate a PDF for a preview
@@ -118,7 +118,7 @@ class LinkController extends AbstractController
     }
 
     /**
-     * one of the main "actions" in th test documentation
+     * one of the main "actions" in the test documentation
      *
      * Redirect the user to the configured domain
      * the analytic incrementation happens inside the event subscriber
