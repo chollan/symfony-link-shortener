@@ -31,8 +31,9 @@ CREATE TABLE `link` (
     `updated` datetime DEFAULT NULL,
     `preview` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `preview_attempts` int NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `UNIQ_36AC99F1841CB121` (`uri`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -45,4 +46,4 @@ CREATE TABLE `link` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-16  3:43:13
+-- Dump completed on 2021-09-16  5:08:22
